@@ -31,7 +31,6 @@ public class Market {
         }
         return null;
     }
-    // TODO: maybe incorporate randPrice in getStock?
 
     // EFFECTS: returns stock by index
     public Stock getStock(int index) {
