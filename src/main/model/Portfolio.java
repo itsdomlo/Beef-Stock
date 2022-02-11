@@ -52,10 +52,12 @@ public class Portfolio {
         return totalValue;
     }
 
+    // EFFECTS: returns number of stocks owned in the portfolio
     public int size() {
         return this.portfolio.size();
     }
 
+    // EFFECTS: returns true is portfolio is empty, false otherwise
     public boolean isEmpty() {
         return this.portfolio.isEmpty();
     }
