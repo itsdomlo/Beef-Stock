@@ -10,7 +10,7 @@ Using *Beef Stock*, you can:
 - trade in-game stocks with **imaginary money**
 - manage and grow your portfolio
 - monitor market fluctuations
-- play a single-player game of maximizing your profit in a fixed time
+
 
 Let's start investing!
 
@@ -24,8 +24,7 @@ Let's start investing!
 - As a user, I want to buy/sell a stock.
 - As a user, I want to add/remove stocks I bought/sold to/from my portfolio.
 - As a user, I want to view the summary of my portfolio.
-- As a user, I want to view the details of any stock in my portfolio.
-- As a user, I want to save my progress in the account, and retrieve it when I login again. 
+- (To be implemented) As a user, I want to save my progress in the account, and retrieve it when I quit and login again. 
 
 
 

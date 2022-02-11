@@ -6,23 +6,26 @@ import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class TradingApp {
+// Beef Stock Trading Application
+public class BeefStock {
 
     private Market market;
     private Accounts accounts;
     private Scanner input;
     private Timer timer;
 
+    private static final int everyMillisecondUpdateStockPrice = 20000;
+
     // EFFECTS: runs the trading application
-    public TradingApp() {
+    public BeefStock() {
         runTrading();
     }
 
     // MODIFIES: this
-    // EFFECTS: processes user input
+    // EFFECTS: processes user command on login page
     private void runTrading() {
         boolean keepGoing = true;
-        String command = null;
+        String command;
 
         init();
 
@@ -42,6 +45,7 @@ public class TradingApp {
         System.out.println("See you soon, happy investing!");
     }
 
+    // EFFECTS: displays menu on login page
     private void displayLoginPage() {
         System.out.println("\nWelcome to Beef Stock,");
         System.out.println("your wallet-friendly stock trading platform");
@@ -51,6 +55,8 @@ public class TradingApp {
         System.out.println("\te -> Exit");
     }
 
+    // MODIFIES: this
+    // EFFECTS: processes user command on login page
     private void processLoginPageCommand(String command) {
         if (command.equals("n")) {
             createAccount();
@@ -61,6 +67,8 @@ public class TradingApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: creates a new account and add to the accounts database
     private void createAccount() {
         boolean isUsernameUsed = true;
         String username = null;
@@ -85,6 +93,7 @@ public class TradingApp {
         System.out.println("you will need them to login.");
     }
 
+    // EFFECTS: successful login would bring to account's front page
     private void login() {
         System.out.println("\nPlease enter your username:");
         String username = input.next();
@@ -99,9 +108,11 @@ public class TradingApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: processes user command on front page
     private void frontPage(Account account) {
         boolean keepGoing = true;
-        String command = null;
+        String command;
 
         System.out.println("\nWelcome " + account.getName() + ".");
         while (keepGoing) {
@@ -111,7 +122,7 @@ public class TradingApp {
             System.out.println("\nYour account total value is "
                     + String.format("$%.2f", account.getBalance()
                     + account.getPortfolio().totalPortfolioMarketValue()));
-            System.out.println("Your fee per trade is " + String.format("$%.2f",account.getFeePerTrade()));
+            System.out.println("Your fee per trade is " + String.format("$%.2f", account.getFeePerTrade()));
             displayFrontPage();
             command = input.next();
             command = command.toLowerCase();
@@ -125,6 +136,7 @@ public class TradingApp {
         }
     }
 
+    // EFFECTS: displays menu on front page
     private void displayFrontPage() {
         System.out.println("\nPlease select the following:");
         System.out.println("\td -> Deposit money");
@@ -136,6 +148,8 @@ public class TradingApp {
         System.out.println("\tl -> Logout");
     }
 
+    // MODIFIES: this
+    // EFFECTS: processes user command on front page
     private void processFrontPageCommand(String command, Account account) {
         switch (command.toLowerCase()) {
             case "d":
@@ -156,9 +170,14 @@ public class TradingApp {
             case "p":
                 myPortfolio(account);
                 break;
+            default:
+                System.out.println("Invalid input, please try again.");
+                break;
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: processes user command for deposit function
     private void deposit(Account account) {
         System.out.println("\nEnter deposit amount:");
         double amount = input.nextDouble();
@@ -169,6 +188,8 @@ public class TradingApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: processes user command for withdraw function
     private void withdraw(Account account) {
         System.out.println("\nEnter withdrawal amount:");
         double amount = input.nextDouble();
@@ -181,6 +202,7 @@ public class TradingApp {
         }
     }
 
+    // EFFECTS: displays overview of all stocks
     private void exploreStockExchange() {
         boolean keepGoing = true;
         String command = null;
@@ -205,6 +227,7 @@ public class TradingApp {
         }
     }
 
+    // EFFECTS: display details of a given stock
     private void processStockDetailsCommand(String symbol) {
         Stock stock = market.getStock(symbol);
         if (stock != null) {
@@ -223,70 +246,104 @@ public class TradingApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: processes user command for buying stocks
     private void buy(Account account) {
-        Stock stock = null;
-        int numSharesToBuy = 0;
-        double price = 0;
+        Stock stock;
+        int numSharesToBuy;
+        double price;
 
         System.out.println("\nEnter the stock symbol:");
         String symbol = input.next();
         stock = market.getStock(symbol);
+
         if (stock != null) {
-            System.out.println("The current ask price for " + stock.getSymbol() + " is "
-                    + String.format("$%.2f", stock.getAskPrice()));
-            System.out.println("# of shares to buy (integer):");
-            numSharesToBuy = input.nextInt();
-            if (numSharesToBuy > 0) {
-                System.out.println("Buying price: (>= ask price)");
-                price = input.nextDouble();
-                if (price < stock.getAskPrice()) {
-                    System.out.println("Your price needs to be >= current ask price, please try again.");
-                } else if (price * numSharesToBuy > account.getBalance()) {
-                    System.out.println("Insufficient balance for transaction, please try again.");
-                } else {
-                    account.buy(stock, numSharesToBuy, price);
-                }
+
+            printSpecificBuyInfo(account, stock);
+
+            System.out.println("# of shares to buy (positive integer):");
+            numSharesToBuy = (int) input.nextDouble();
+            System.out.println("Buying price: (>= ask price)");
+            price = input.nextDouble();
+
+            if (numSharesToBuy > 0 && price >= stock.getAskPrice() && price * numSharesToBuy <= account.getBalance()) {
+                account.buy(stock, numSharesToBuy, price);
             } else {
-                System.out.println("# of shares to buy cannot be <0, please try again.");
+                handleBuyError(account, stock, numSharesToBuy, price);
             }
         } else {
             System.out.println("Invalid stock symbol, please try again");
         }
     }
 
+    // EFFECTS: displays relevant information for buying the given stock
+    private void printSpecificBuyInfo(Account account, Stock stock) {
+        System.out.println("The current ask price for " + stock.getSymbol() + " is "
+                + String.format("$%.2f", stock.getAskPrice()));
+    }
+
+    // EFFECTS: displays the corresponding error for buying the given stock
+    private void handleBuyError(Account account, Stock stock, int numSharesToBuy, double price) {
+        if (price < stock.getAskPrice()) {
+            System.out.println("Your price needs to be >= current ask price, please try again.");
+        } else if (price * numSharesToBuy > account.getBalance()) {
+            System.out.println("Insufficient balance for transaction, please try again.");
+        } else {
+            System.out.println("# of shares to buy cannot be <=0 or other error, please try again.");
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: processes user command for selling stocks
     private void sell(Account account) {
         StockOwned stockOwned;
         int numSharesToSell;
-        double price = 0;
+        double price;
 
         System.out.println("\nEnter the stock symbol:");
         String symbol = input.next();
         stockOwned = account.getPortfolio().getStock(symbol);
         Stock stock = market.getStock(symbol);
+
         if (stockOwned != null) {
-            System.out.println("The current bid price for " + stock.getSymbol() + " is "
-                    + String.format("$%.2f", stock.getBidPrice()));
-            System.out.println("You have " + stockOwned.getNumSharesOwned() + " shares of "
-                    + stock.getSymbol() + " at average cost of "
-                    + String.format("$%.2f", stockOwned.getAverageCost()));
+
+            printSpecificSellInfo(stock, stockOwned);
+
             System.out.println("# of shares to sell:");
-            numSharesToSell = input.nextInt();
-            if (numSharesToSell > 0 && numSharesToSell <= stockOwned.getNumSharesOwned()) {
-                System.out.println("Selling price: (<= bid price)");
-                price = input.nextDouble();
-                if (price > 0 && price <= stock.getBidPrice()) {
-                    account.sell(stockOwned, numSharesToSell, price);
-                } else {
-                    System.out.println("Price needs to be <= current bid price and > 0 , please try again.");
-                }
+            numSharesToSell = (int) input.nextDouble();
+            System.out.println("Selling price: (<= bid price)");
+            price = input.nextDouble();
+
+            if (numSharesToSell > 0 && numSharesToSell <= stockOwned.getNumSharesOwned()
+                    && price > 0 && price <= stock.getBidPrice()) {
+                account.sell(stockOwned, numSharesToSell, price);
             } else {
-                System.out.println("Insufficient or invalid shares to sell, please try again.");
+                handleSellError(stock, stockOwned, numSharesToSell, price);
             }
         } else {
             System.out.println("You don't own this stock or invalid stock symbol, please try again");
         }
     }
 
+    // EFFECTS: displays relevant information for selling the given stock
+    private void printSpecificSellInfo(Stock stock, StockOwned stockOwned) {
+        System.out.println("The current bid price for " + stock.getSymbol() + " is "
+                + String.format("$%.2f", stock.getBidPrice()));
+        System.out.println("You have " + stockOwned.getNumSharesOwned() + " shares of "
+                + stock.getSymbol() + " at average cost of "
+                + String.format("$%.2f", stockOwned.getAverageCost()));
+    }
+
+    // EFFECTS: displays the corresponding error for selling the given stock
+    private void handleSellError(Stock stock, StockOwned stockOwned, int numSharesToSell, double price) {
+        if (price > stock.getBidPrice() || price <= 0) {
+            System.out.println("Price needs to be <= current bid price and > 0 , please try again.");
+        } else {
+            System.out.println("Insufficient or invalid shares to sell, please try again.");
+        }
+    }
+
+    // EFFECTS: displays summary of account's stock portfolio
     private void myPortfolio(Account account) {
         System.out.println("\nHere's your portfolio:");
         for (int i = 0; i < account.getPortfolio().size(); i++) {
@@ -303,7 +360,7 @@ public class TradingApp {
     }
 
     // MODIFIES: this
-    // EFFECTS: initializes the market and accounts
+    // EFFECTS: initializes the market, accounts, randomly and periodically generate stock prices
     private void init() {
         market = new Market();
         market.addStock(new Stock("AAPL", "Apple Inc.", 176.28, 0.0005,
@@ -330,7 +387,7 @@ public class TradingApp {
                     market.getStock(i).randPrice();
                 }
             }
-        }, 0, 10000); //update stock price every given millisecond
+        }, 0, everyMillisecondUpdateStockPrice); //update stock price every given millisecond
     }
 
 
