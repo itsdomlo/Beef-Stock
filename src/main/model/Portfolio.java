@@ -3,24 +3,27 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+// Represents the stock portfolio of a trading account
 public class Portfolio {
 
     private List<StockOwned> portfolio;
 
+    // EFFECTS: initializes an empty portfolio
     public Portfolio() {
         this.portfolio = new ArrayList<>();
     }
 
-    // REQUIRES: stock not in portfolio, stock in market, numSharesToBuy, price > 0
+    // REQUIRES: stockOwned not in portfolio, numSharesToBuy, price > 0
     // MODIFIES: this
-    // EFFECTS: adds newly purchased stock to portfolio
-    public void addStock(Stock stock,int numSharesToBuy, double price) {
-        this.portfolio.add(new StockOwned(stock,numSharesToBuy,price));
+    // EFFECTS: adds a new StockOwned to portfolio
+    public void addStockOwned(StockOwned stockOwned) {
+        this.portfolio.add(stockOwned);
     }
 
+    // REQUIRES: stockOwned is in portfolio
     // MODIFIES: this
     // EFFECTS: removes stock from portfolio
-    public void removeStock(StockOwned stockOwned) {
+    public void removeStockOwned(StockOwned stockOwned) {
         this.portfolio.remove(stockOwned);
     }
 
@@ -34,6 +37,8 @@ public class Portfolio {
         return null;
     }
 
+    // REQUIRES: there is a StockOwned at index
+    // EFFECTS: returns StockOwned at index
     public StockOwned getStock(int index) {
         return this.portfolio.get(index);
     }
@@ -49,6 +54,10 @@ public class Portfolio {
 
     public int size() {
         return this.portfolio.size();
+    }
+
+    public boolean isEmpty() {
+        return this.portfolio.isEmpty();
     }
 
 }

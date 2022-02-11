@@ -1,6 +1,6 @@
 package model;
 
-// Represents a trading account with username, password, owner name, balance and a portfolio
+// Represents a trading account for a user
 public class Account {
     private String username;
     private String password;
@@ -9,7 +9,7 @@ public class Account {
     private double feePerTrade; //USD
     private Portfolio portfolio;
 
-    private static final double DEFAULT_FEE_PER_TRADE = 5; //USD
+    protected static final double DEFAULT_FEE_PER_TRADE = 5; //USD
 
     // REQUIRES: username, password and name has non-zero length
     // EFFECTS: creates a trading account with given username, password and name.
@@ -50,7 +50,8 @@ public class Account {
         if (s != null) {
             s.buyStockOwned(numSharesToBuy,price);
         } else {
-            this.portfolio.addStock(stock,numSharesToBuy,price);
+            StockOwned stockOwned = new StockOwned(stock,numSharesToBuy,price);
+            this.portfolio.addStockOwned(stockOwned);
         }
     }
 
@@ -65,12 +66,13 @@ public class Account {
         if (stockOwned.getNumSharesOwned() > numSharesToSell) {
             stockOwned.sellStockOwned(numSharesToSell);
         } else {
-            this.portfolio.removeStock(stockOwned);
+            this.portfolio.removeStockOwned(stockOwned);
         }
     }
 
     // SETTERS
 
+    // REQUIRES: newPassword non-zero string length
     // MODIFIES: this
     // EFFECTS: changes password
     public void setPassword(String newPassword) {

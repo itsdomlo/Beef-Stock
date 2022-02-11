@@ -25,15 +25,6 @@ public class TradingApp {
         String command = null;
 
         init();
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            public void run() {
-                for (int i = 0; i < market.size(); i++) {
-                    market.getStock(i).randPrice();
-                }
-            }
-        }, 0, 10000); //updates every given millisecond
-
 
         while (keepGoing) {
             displayLoginPage();
@@ -195,10 +186,9 @@ public class TradingApp {
         String command = null;
 
         while (keepGoing) {
-            System.out.println("\nThe following stocks are in the stock exchange:");
+            System.out.println("\nThe following stocks are available for trade:");
             for (int i = 0; i < market.size(); i++) {
                 Stock stock = market.getStock(i);
-                //stock.randPrice();
                 System.out.println(stock.getSymbol() + " | " + stock.getName()
                         + " | Bid Price: $" + String.format("%.2f", stock.getBidPrice())
                         + " | Ask Price: $" + String.format("%.2f", stock.getAskPrice()));
@@ -218,7 +208,6 @@ public class TradingApp {
     private void processStockDetailsCommand(String symbol) {
         Stock stock = market.getStock(symbol);
         if (stock != null) {
-            //stock.randPrice();
             System.out.println("\nStock symbol: " + stock.getSymbol());
             System.out.println("Company: " + stock.getName());
             System.out.println("Sector: " + stock.getSector());
@@ -243,10 +232,9 @@ public class TradingApp {
         String symbol = input.next();
         stock = market.getStock(symbol);
         if (stock != null) {
-            //stock.randPrice(); // for now
             System.out.println("The current ask price for " + stock.getSymbol() + " is "
                     + String.format("$%.2f", stock.getAskPrice()));
-            System.out.println("# of shares to buy:");
+            System.out.println("# of shares to buy (integer):");
             numSharesToBuy = input.nextInt();
             if (numSharesToBuy > 0) {
                 System.out.println("Buying price: (>= ask price)");
@@ -276,7 +264,6 @@ public class TradingApp {
         stockOwned = account.getPortfolio().getStock(symbol);
         Stock stock = market.getStock(symbol);
         if (stockOwned != null) {
-            //stock.randPrice(); // for now
             System.out.println("The current bid price for " + stock.getSymbol() + " is "
                     + String.format("$%.2f", stock.getBidPrice()));
             System.out.println("You have " + stockOwned.getNumSharesOwned() + " shares of "
@@ -318,29 +305,32 @@ public class TradingApp {
     // MODIFIES: this
     // EFFECTS: initializes the market and accounts
     private void init() {
-        Stock apple = new Stock("AAPL", "Apple Inc.", 176.28, 0.0005,
-                16320000000L, 6.01, 1.19, "Technology");
-        Stock microsoft = new Stock("MSFT", "Microsoft Corporation", 311.21, 0.0003,
-                7500000000L, 9.39, 0.89, "Technology");
-        Stock google = new Stock("GOOG", "Alphabet Inc.", 2829.06, 0.0007,
-                315640000L, 112.2, 1.07, "Technology");
-        Stock tesla = new Stock("TSLA", "Tesla, Inc.", 932.00, 0.0008,
-                1030000000L, 4.9, 2.01, "Capital Goods");
-        Stock visa = new Stock("V", "Visa Inc.", 230.87, 0.0004,
-                1660000000L, 6.04, 0.92, "Financial Services");
         market = new Market();
-        market.addStock(apple);
-        market.addStock(microsoft);
-        market.addStock(google);
-        market.addStock(tesla);
-        market.addStock(visa);
+        market.addStock(new Stock("AAPL", "Apple Inc.", 176.28, 0.0005,
+                16320000000L, 6.01, 1.19, "Technology"));
+        market.addStock(new Stock("MSFT", "Microsoft Corporation", 311.21, 0.0003,
+                7500000000L, 9.39, 0.89, "Technology"));
+        market.addStock(new Stock("GOOG", "Alphabet Inc.", 2829.06, 0.0007,
+                315640000L, 112.2, 1.07, "Technology"));
+        market.addStock(new Stock("TSLA", "Tesla, Inc.", 932.00, 0.0008,
+                1030000000L, 4.9, 2.01, "Capital Goods"));
+        market.addStock(new Stock("V", "Visa Inc.", 230.87, 0.0004,
+                1660000000L, 6.04, 0.92, "Financial Services"));
 
-        Account presetAccount = new Account("dom123", "123", "Dominic");
         accounts = new Accounts();
-        accounts.addAccount(presetAccount);
+        accounts.addAccount(new Account("dom", "dom", "Dominic"));
 
         input = new Scanner(System.in);
         input.useDelimiter("\n");
+
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+                for (int i = 0; i < market.size(); i++) {
+                    market.getStock(i).randPrice();
+                }
+            }
+        }, 0, 10000); //update stock price every given millisecond
     }
 
 

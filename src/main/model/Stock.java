@@ -2,6 +2,7 @@ package model;
 
 import java.util.Random;
 
+// Represents a stock on the stock exchange market
 public class Stock {
 
     private String symbol;
@@ -23,14 +24,14 @@ public class Stock {
     private int spreadDownForRand;
 
     // Default price fluctuation parameters
-    private static final int DEFAULT_PRICE_MID = 10000;
-    private static final int DEFAULT_PRICE_UP = 100;
-    private static final int DEFAULT_PRICE_DOWN = 100;
-    private static final int DEFAULT_SPREAD_MID = 10000;
-    private static final int DEFAULT_SPREAD_UP = 1000;
-    private static final int DEFAULT_SPREAD_DOWN = 1000;
+    protected static final int DEFAULT_PRICE_MID = 10000;
+    protected static final int DEFAULT_PRICE_UP = 100;
+    protected static final int DEFAULT_PRICE_DOWN = 100;
+    protected static final int DEFAULT_SPREAD_MID = 10000;
+    protected static final int DEFAULT_SPREAD_UP = 1000;
+    protected static final int DEFAULT_SPREAD_DOWN = 1000;
 
-    // REQUIRES: symbol is uppercase, askPrice, bitAskSpread, totalNumShares > 0
+    // REQUIRES: symbol is uppercase, askPrice, bitAskSpread, totalNumShares > 0, askPrice > bitAskSpread,
     //           earningsPerShare >= 0 (0 means making losses)
     // EFFECTS: initializes a stock based on the given information with default price fluctuation parameters
     public Stock(String symbol, String name, double askPrice, double bitAskSpread,
@@ -53,7 +54,7 @@ public class Stock {
         this.spreadDownForRand = DEFAULT_SPREAD_DOWN;
     }
 
-    // EFFECTS: returns the market price
+    // EFFECTS: returns the market price, assumed to be average of bid and ask
     public double marketPrice() {
         return (this.bidPrice + this.askPrice) / 2;
     }
@@ -61,12 +62,12 @@ public class Stock {
     // REQUIRES: earningsPerShare > 0
     // EFFECTS: returns the P/E Ratio
     public double peRatio() {
-        return this.marketPrice() / this.earningsPerShare;
+        return marketPrice() / this.earningsPerShare;
     }
 
     // EFFECTS: returns the market capitalization
     public double marketCap() {
-        return this.marketPrice() * this.totalNumShares;
+        return marketPrice() * this.totalNumShares;
     }
 
     // MODIFIES: this
@@ -189,4 +190,27 @@ public class Stock {
         return this.sector;
     }
 
+    public int getPriceMidForRand() {
+        return this.priceMidForRand;
+    }
+
+    public int getPriceUpForRand() {
+        return this.priceUpForRand;
+    }
+
+    public int getPriceDownForRand() {
+        return this.priceDownForRand;
+    }
+
+    public int getSpreadMidForRand() {
+        return this.spreadMidForRand;
+    }
+
+    public int getSpreadUpForRand() {
+        return this.spreadUpForRand;
+    }
+
+    public int getSpreadDownForRand() {
+        return this.spreadDownForRand;
+    }
 }

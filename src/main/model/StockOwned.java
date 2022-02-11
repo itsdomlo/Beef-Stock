@@ -1,11 +1,13 @@
 package model;
 
+// Represents a stock owned in the portfolio
 public class StockOwned {
 
     private Stock stock;
     private int numSharesOwned;
     private double averageCost;
 
+    // EFFECTS: initialize a newly owned stock
     public StockOwned(Stock stock, int numSharesOwned, double averageCost) {
         this.stock = stock;
         this.numSharesOwned = numSharesOwned;
