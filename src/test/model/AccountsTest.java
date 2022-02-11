@@ -46,10 +46,24 @@ public class AccountsTest {
     }
 
     @Test
-    void testGetAccountNull() {
+    void testGetAccountNullWrongPassword() {
         accounts.addAccount(ACC1);
         accounts.addAccount(ACC2);
-        assertEquals(null,accounts.getAccount("ken","789"));
+        assertEquals(null,accounts.getAccount("may","789"));
+    }
+
+    @Test
+    void testGetAccountNullWrongUsername() {
+        accounts.addAccount(ACC1);
+        accounts.addAccount(ACC2);
+        assertEquals(null,accounts.getAccount("jun","456"));
+    }
+
+    @Test
+    void testGetAccountNullAllWrong() {
+        accounts.addAccount(ACC1);
+        accounts.addAccount(ACC2);
+        assertEquals(null,accounts.getAccount("jun","789"));
     }
 
     @Test
