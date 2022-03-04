@@ -52,6 +52,7 @@ public class StockOwned implements Writable {
         return this.averageCost;
     }
 
+    // EFFECTS: returns stock owned as JSON object
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();

@@ -90,16 +90,18 @@ public class Account implements Writable {
         this.feePerTrade = newFeePerTrade;
     }
 
-    //TODO
+    // REQUIRES: balance >= 0
+    // MODIFIES: this
+    // EFFECTS: sets balance of account
     public void setBalance(double balance) {
         this.balance = balance;
     }
 
-    //TODO
+    // MODIFIES: this
+    // EFFECTS: sets portfolio of account
     public void setPortfolio(Portfolio portfolio) {
         this.portfolio = portfolio;
     }
-
 
     // GETTERS
     public String getUsername() {
@@ -126,6 +128,7 @@ public class Account implements Writable {
         return this.portfolio;
     }
 
+    // EFFECTS: returns account as JSON object
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();

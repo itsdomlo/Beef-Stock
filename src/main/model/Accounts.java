@@ -59,6 +59,7 @@ public class Accounts implements Writable {
         return this.database.isEmpty();
     }
 
+    // EFFECTS: returns accounts as JSON object
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();

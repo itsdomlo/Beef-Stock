@@ -15,6 +15,7 @@ public class JsonWriter {
     private PrintWriter writer;
     private String destination;
 
+    // EFFECTS: constructs writer to write to source file
     public JsonWriter(String destination) {
         this.destination = destination;
     }

@@ -57,6 +57,7 @@ public class Portfolio implements Writable {
         return this.portfolio.isEmpty();
     }
 
+    // EFFECTS: returns portfolio as JSON object
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();

@@ -391,7 +391,7 @@ public class BeefStock {
     }
 
     // MODIFIES: this
-    // EFFECTS: initializes the market, accounts, randomly and periodically generate stock prices
+    // EFFECTS: initializes the application
     private void init() {
         market = new Market();
         market.addStock(new Stock("AAPL", "Apple Inc.", 176.28, 0.0005,
@@ -402,8 +402,6 @@ public class BeefStock {
                 315640000L, 112.2, 1.07, "Technology"));
         market.addStock(new Stock("TSLA", "Tesla, Inc.", 932.00, 0.0008,
                 1030000000L, 4.9, 2.01, "Capital Goods"));
-//        market.addStock(new Stock("V", "Visa Inc.", 230.87, 0.0004,
-//                1660000000L, 6.04, 0.92, "Financial Services"));
 
         accounts = new Accounts();
 
@@ -420,6 +418,8 @@ public class BeefStock {
         }, 0, everyMillisecondUpdateStockPrice); //update stock price every given millisecond
     }
 
+    // MODIFIES: this
+    // EFFECTS: save existing state of accounts to given file name
     private void saveAccounts() {
         printJsonFilesInData();
         System.out.println("Name your file: (same name as existing file will overwrite it)");
@@ -437,6 +437,8 @@ public class BeefStock {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: load accounts from given file to application
     private void loadAccounts() {
         printJsonFilesInData();
         System.out.println("Please enter file name: (no need .json extension)");
@@ -452,6 +454,7 @@ public class BeefStock {
         }
     }
 
+    // EFFECTS: displays file name of all json files under ./data
     private void printJsonFilesInData() {
         File folder = new File("./data");
         File[] files = folder.listFiles(new FilenameFilter() {

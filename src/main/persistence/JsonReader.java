@@ -56,6 +56,8 @@ public class JsonReader {
         return accounts;
     }
 
+    // MODIFIES: accounts
+    // EFFECTS: parses account from JSON object and adds to accounts
     private void addAccount(Accounts accounts, JSONObject jsonObject) {
         String username = jsonObject.getString("username");
         String password = jsonObject.getString("password");
@@ -72,6 +74,7 @@ public class JsonReader {
         accounts.addAccount(account);
     }
 
+    // EFFECTS: parses portfolio from JSON object and returns it
     private Portfolio constructPortfolio(JSONObject jsonObject) {
         Portfolio portfolio = new Portfolio();
 
@@ -83,6 +86,8 @@ public class JsonReader {
         return portfolio;
     }
 
+    // MODIFIES: portfolio
+    // EFFECTS: parses StockOwned from JSON object and adds to portfolio
     private void addStockOwned(Portfolio portfolio, JSONObject jsonObject) {
         String stockSymbol = jsonObject.getString("stock symbol");
         int numSharesOwned = jsonObject.getInt("number of shares owned");
