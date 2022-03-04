@@ -9,19 +9,18 @@ public class StockOwnedTest {
 
     private StockOwned stockOwned;
 
-    private static final Stock GOOGLE = new Stock("GOOG", "Alphabet Inc.", 2829.06,
-            0.0007, 315640000L, 112.2, 1.07, "Technology");
+    private static final String STOCK_SYMBOL = "GOOG";
     private static final int NUM_SHARES_OWNED = 10;
     private static final double AVERAGE_COST = 2800.00;
 
     @BeforeEach
     void runBefore() {
-        stockOwned = new StockOwned(GOOGLE, NUM_SHARES_OWNED, AVERAGE_COST);
+        stockOwned = new StockOwned(STOCK_SYMBOL, NUM_SHARES_OWNED, AVERAGE_COST);
     }
 
     @Test
     void testConstructor() {
-        assertEquals(GOOGLE, stockOwned.getStock());
+        assertEquals(STOCK_SYMBOL, stockOwned.getStockSymbol());
         assertEquals(NUM_SHARES_OWNED, stockOwned.getNumSharesOwned());
         assertEquals(AVERAGE_COST, stockOwned.getAverageCost());
     }
@@ -43,18 +42,6 @@ public class StockOwnedTest {
     @Test
     void testTotalValueAtAverageCost() {
         assertEquals(NUM_SHARES_OWNED * AVERAGE_COST, stockOwned.totalValueAtAverageCost());
-    }
-
-    @Test
-    void testTotalValueAtMarketPrice() {
-        assertEquals(NUM_SHARES_OWNED * stockOwned.getStock().marketPrice(),
-                stockOwned.totalValueAtMarketPrice());
-    }
-
-    @Test
-    void testProfitOrLoss() {
-        assertEquals(NUM_SHARES_OWNED * (stockOwned.getStock().marketPrice() - stockOwned.getAverageCost()),
-                stockOwned.profitOrLoss());
     }
 
 }

@@ -12,10 +12,6 @@ class AccountTest {
     private static final String USERNAME = "dom";
     private static final String PASSWORD = "123";
     private static final String NAME = "Dominic";
-    private static final Stock MICROSOFT = new Stock("MSFT", "Microsoft Corporation", 311.21,
-            0.0003, 7500000000L, 9.39, 0.89, "Technology");
-    private static final Stock APPLE = new Stock("AAPL", "Apple Inc.", 176.28, 0.0005,
-            16320000000L, 6.01, 1.19, "Technology");
 
     @BeforeEach
     void runBefore() {
@@ -48,10 +44,10 @@ class AccountTest {
     @Test
     void testBuyStockNotYetOwned() {
         account.deposit(10000);
-        account.buy(MICROSOFT, 10, 500);
+        account.buy("MSFT", 10, 500);
         assertEquals(10000 - 10 * 500 - Account.DEFAULT_FEE_PER_TRADE, account.getBalance());
         assertEquals(1, account.getPortfolio().size());
-        assertEquals(MICROSOFT, account.getPortfolio().getStock(0).getStock());
+        assertEquals("MSFT", account.getPortfolio().getStock(0).getStockSymbol());
         assertEquals(10, account.getPortfolio().getStock(0).getNumSharesOwned());
         assertEquals(500, account.getPortfolio().getStock(0).getAverageCost());
     }
@@ -60,8 +56,8 @@ class AccountTest {
     @Test
     void testBuyStockAlreadyOwned() {
         account.deposit(20000);
-        account.buy(MICROSOFT, 10, 500);
-        account.buy(MICROSOFT, 10, 600);
+        account.buy("MSFT", 10, 500);
+        account.buy("MSFT", 10, 600);
         assertEquals(10 + 10, account.getPortfolio().getStock(0).getNumSharesOwned());
         assertEquals((10 * 500 + 10 * 600) / (10 + 10), account.getPortfolio().getStock(0).getAverageCost());
         assertEquals(1, account.getPortfolio().size());
@@ -70,14 +66,14 @@ class AccountTest {
     @Test
     void testBuyTwoStocksNotYetOwned() {
         account.deposit(10000);
-        account.buy(MICROSOFT, 10, 500);
-        account.buy(APPLE, 20, 200);
+        account.buy("MSFT", 10, 500);
+        account.buy("AAPL", 20, 200);
         assertEquals(10000 - 10 * 500 - 20 * 200 - Account.DEFAULT_FEE_PER_TRADE * 2, account.getBalance());
         assertEquals(2, account.getPortfolio().size());
-        assertEquals(MICROSOFT, account.getPortfolio().getStock(0).getStock());
+        assertEquals("MSFT", account.getPortfolio().getStock(0).getStockSymbol());
         assertEquals(10, account.getPortfolio().getStock(0).getNumSharesOwned());
         assertEquals(500, account.getPortfolio().getStock(0).getAverageCost());
-        assertEquals(APPLE, account.getPortfolio().getStock(1).getStock());
+        assertEquals("AAPL", account.getPortfolio().getStock(1).getStockSymbol());
         assertEquals(20, account.getPortfolio().getStock(1).getNumSharesOwned());
         assertEquals(200, account.getPortfolio().getStock(1).getAverageCost());
     }
@@ -85,7 +81,7 @@ class AccountTest {
     @Test
     void testSellSomeStock() {
         account.deposit(10000);
-        account.buy(MICROSOFT, 10, 500);
+        account.buy("MSFT", 10, 500);
         StockOwned stockOwned = account.getPortfolio().getStock(0);
         account.sell(stockOwned, 5, 510);
         assertEquals(10000 - 10 * 500 + 5 * 510 - Account.DEFAULT_FEE_PER_TRADE * 2, account.getBalance());
@@ -96,13 +92,14 @@ class AccountTest {
     @Test
     void testSellAllStock() {
         account.deposit(10000);
-        account.buy(MICROSOFT, 10, 500);
-        account.buy(APPLE, 20, 200);
+        account.buy("MSFT", 10, 500);
+        account.buy("AAPL", 20, 200);
+        assertEquals(2,account.getPortfolio().size());
         StockOwned stockOwned = account.getPortfolio().getStock(0);
         account.sell(stockOwned, 10, 520);
         assertEquals(10000 - 10 * 500 - 20 * 200 + 10 * 520
                 - Account.DEFAULT_FEE_PER_TRADE * 3, account.getBalance());
-        assertEquals(null, account.getPortfolio().getStock(MICROSOFT.getSymbol()));
+        assertEquals(null, account.getPortfolio().getStock("MSFT"));
         assertEquals(1,account.getPortfolio().size());
     }
 
@@ -116,6 +113,21 @@ class AccountTest {
     void testSetFeePerTrade() {
         account.setFeePerTrade(100);
         assertEquals(100,account.getFeePerTrade());
+    }
+
+    @Test
+    void testSetBalance() {
+        account.setBalance(1234);
+        assertEquals(1234,account.getBalance());
+    }
+
+    @Test
+    void testSetPortfolio() {
+        Portfolio portfolio = new Portfolio();
+        StockOwned stockOwned = new StockOwned("TSLA",10,1000);
+        portfolio.addStockOwned(stockOwned);
+        account.setPortfolio(portfolio);
+        assertEquals(portfolio,account.getPortfolio());
     }
 
 }

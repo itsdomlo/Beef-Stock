@@ -1,20 +1,27 @@
 package ui;
 
 import model.*;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.*;
 import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
+//Citation: JsonSerializationDemo
+
 // Beef Stock Trading Application
 public class BeefStock {
+
+    private static final int everyMillisecondUpdateStockPrice = 20000;
 
     private Market market;
     private Accounts accounts;
     private Scanner input;
     private Timer timer;
-
-    private static final int everyMillisecondUpdateStockPrice = 20000;
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
 
     // EFFECTS: runs the trading application
     public BeefStock() {
@@ -34,7 +41,7 @@ public class BeefStock {
             command = input.next();
             command = command.toLowerCase();
 
-            if (command.equals("e")) {
+            if (command.equals("5")) {
                 keepGoing = false;
             } else {
                 processLoginPageCommand(command);
@@ -50,20 +57,32 @@ public class BeefStock {
         System.out.println("\nWelcome to Beef Stock,");
         System.out.println("your wallet-friendly stock trading platform");
         System.out.println("Please select the following:");
-        System.out.println("\tn -> Create new account");
-        System.out.println("\tl -> Login");
-        System.out.println("\te -> Exit");
+        System.out.println("\t1 -> Create new account");
+        System.out.println("\t2 -> Login");
+        System.out.println("\t3 -> save accounts to file");
+        System.out.println("\t4 -> load accounts from file");
+        System.out.println("\t5 -> Exit");
     }
 
     // MODIFIES: this
     // EFFECTS: processes user command on login page
     private void processLoginPageCommand(String command) {
-        if (command.equals("n")) {
-            createAccount();
-        } else if (command.equals("l")) {
-            login();
-        } else {
-            System.out.println("Invalid input, please try again.");
+        switch (command) {
+            case "1":
+                createAccount();
+                break;
+            case "2":
+                login();
+                break;
+            case "3":
+                saveAccounts();
+                break;
+            case "4":
+                loadAccounts();
+                break;
+            default:
+                System.out.println("Invalid input, please try again.");
+                break;
         }
     }
 
@@ -117,11 +136,9 @@ public class BeefStock {
         System.out.println("\nWelcome " + account.getName() + ".");
         while (keepGoing) {
             System.out.printf("\nYour buying power is $%.2f.", account.getBalance());
-            System.out.printf("\nYour portfolio market value is $%.2f",
-                    account.getPortfolio().totalPortfolioMarketValue());
+            System.out.printf("\nYour portfolio market value is $%.2f", portfolioTotalMarketValue(account));
             System.out.println("\nYour account total value is "
-                    + String.format("$%.2f", account.getBalance()
-                    + account.getPortfolio().totalPortfolioMarketValue()));
+                    + String.format("$%.2f", account.getBalance() + portfolioTotalMarketValue(account)));
             System.out.println("Your fee per trade is " + String.format("$%.2f", account.getFeePerTrade()));
             displayFrontPage();
             command = input.next();
@@ -254,7 +271,7 @@ public class BeefStock {
         double price;
 
         System.out.println("\nEnter the stock symbol:");
-        String symbol = input.next();
+        String symbol = input.next().toUpperCase();
         stock = market.getStock(symbol);
 
         if (stock != null) {
@@ -267,7 +284,7 @@ public class BeefStock {
             price = input.nextDouble();
 
             if (numSharesToBuy > 0 && price >= stock.getAskPrice() && price * numSharesToBuy <= account.getBalance()) {
-                account.buy(stock, numSharesToBuy, price);
+                account.buy(symbol, numSharesToBuy, price);
             } else {
                 handleBuyError(account, stock, numSharesToBuy, price);
             }
@@ -301,7 +318,7 @@ public class BeefStock {
         double price;
 
         System.out.println("\nEnter the stock symbol:");
-        String symbol = input.next();
+        String symbol = input.next().toUpperCase();
         stockOwned = account.getPortfolio().getStock(symbol);
         Stock stock = market.getStock(symbol);
 
@@ -348,15 +365,29 @@ public class BeefStock {
         System.out.println("\nHere's your portfolio:");
         for (int i = 0; i < account.getPortfolio().size(); i++) {
             StockOwned stockOwned = account.getPortfolio().getStock(i);
-            System.out.println(stockOwned.getStock().getSymbol()
+            String symbol = stockOwned.getStockSymbol();
+            double averageValue = stockOwned.totalValueAtAverageCost();
+            double marketValue = market.stockValueAtMarketPrice(symbol,stockOwned.getNumSharesOwned());
+            System.out.println(symbol
                     + " | # of shares owned: " + stockOwned.getNumSharesOwned()
                     + " | Average cost: " + String.format("$%.2f", stockOwned.getAverageCost())
-                    + " | Total value at avg. cost: " + String.format("$%.2f", stockOwned.totalValueAtAverageCost())
-                    + " | Total value at market price: " + String.format("$%.2f", stockOwned.totalValueAtMarketPrice())
-                    + " | Profit / Loss: " + String.format("$%.2f", stockOwned.profitOrLoss()));
+                    + " | Total value at avg. cost: " + String.format("$%.2f", averageValue)
+                    + " | Total value at market price: " + String.format("$%.2f", marketValue)
+                    + " | Profit / Loss: " + String.format("$%.2f", marketValue - averageValue));
         }
         System.out.println("Total market value of portfolio: "
-                + String.format("$%.2f", account.getPortfolio().totalPortfolioMarketValue()));
+                + String.format("$%.2f", portfolioTotalMarketValue(account)));
+    }
+
+    // EFFECTS: returns total market value of all stocks in the portfolio of given account
+    private double portfolioTotalMarketValue(Account account) {
+        double portfolioTotalMarketValue = 0;
+        for (int i = 0; i < account.getPortfolio().size(); i++) {
+            StockOwned stockOwned = account.getPortfolio().getStock(i);
+            String symbol = stockOwned.getStockSymbol();
+            portfolioTotalMarketValue += market.stockValueAtMarketPrice(symbol,stockOwned.getNumSharesOwned());
+        }
+        return portfolioTotalMarketValue;
     }
 
     // MODIFIES: this
@@ -371,11 +402,10 @@ public class BeefStock {
                 315640000L, 112.2, 1.07, "Technology"));
         market.addStock(new Stock("TSLA", "Tesla, Inc.", 932.00, 0.0008,
                 1030000000L, 4.9, 2.01, "Capital Goods"));
-        market.addStock(new Stock("V", "Visa Inc.", 230.87, 0.0004,
-                1660000000L, 6.04, 0.92, "Financial Services"));
+//        market.addStock(new Stock("V", "Visa Inc.", 230.87, 0.0004,
+//                1660000000L, 6.04, 0.92, "Financial Services"));
 
         accounts = new Accounts();
-        accounts.addAccount(new Account("dom", "dom", "Dominic"));
 
         input = new Scanner(System.in);
         input.useDelimiter("\n");
@@ -390,5 +420,52 @@ public class BeefStock {
         }, 0, everyMillisecondUpdateStockPrice); //update stock price every given millisecond
     }
 
+    private void saveAccounts() {
+        printJsonFilesInData();
+        System.out.println("Name your file: (same name as existing file will overwrite it)");
+        String fileName = input.next();
+        String path = "./data/" + fileName + ".json";
+        jsonWriter = new JsonWriter(path);
+
+        try {
+            jsonWriter.open();
+            jsonWriter.write(accounts);
+            jsonWriter.close();
+            System.out.println("Accounts are saved to " + path);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + path);
+        }
+    }
+
+    private void loadAccounts() {
+        printJsonFilesInData();
+        System.out.println("Please enter file name: (no need .json extension)");
+        String fileName = input.next();
+        String path = "./data/" + fileName + ".json";
+        jsonReader = new JsonReader(path);
+
+        try {
+            accounts = jsonReader.read();
+            System.out.println("Loaded accounts from " + path);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + path);
+        }
+    }
+
+    private void printJsonFilesInData() {
+        File folder = new File("./data");
+        File[] files = folder.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.toLowerCase().endsWith(".json");
+            }
+        });
+
+        System.out.println("\nThe following JSON files are present in ./data:");
+        for (int i = 0; i < files.length; i++) {
+            System.out.println(files[i].getName());
+        }
+
+    }
 
 }

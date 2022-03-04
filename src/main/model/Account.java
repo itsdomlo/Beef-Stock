@@ -1,7 +1,11 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 // Represents a trading account for a user
-public class Account {
+public class Account implements Writable {
     private String username;
     private String password;
     private String name;
@@ -44,13 +48,13 @@ public class Account {
     //          Deduct cost and fee from balance.
     //          If own stock already, add shares to existing StockOwned in portfolio.
     //          If not own stock, add new StockOwned to portfolio.
-    public void buy(Stock stock, int numSharesToBuy, double price) {
+    public void buy(String symbol, int numSharesToBuy, double price) {
         this.balance = this.balance - numSharesToBuy * price - this.feePerTrade;
-        StockOwned s = this.portfolio.getStock(stock.getSymbol());
+        StockOwned s = this.portfolio.getStock(symbol);
         if (s != null) {
             s.buyStockOwned(numSharesToBuy,price);
         } else {
-            StockOwned stockOwned = new StockOwned(stock,numSharesToBuy,price);
+            StockOwned stockOwned = new StockOwned(symbol,numSharesToBuy,price);
             this.portfolio.addStockOwned(stockOwned);
         }
     }
@@ -86,6 +90,17 @@ public class Account {
         this.feePerTrade = newFeePerTrade;
     }
 
+    //TODO
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    //TODO
+    public void setPortfolio(Portfolio portfolio) {
+        this.portfolio = portfolio;
+    }
+
+
     // GETTERS
     public String getUsername() {
         return this.username;
@@ -109,6 +124,18 @@ public class Account {
 
     public Portfolio getPortfolio() {
         return this.portfolio;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("username",username);
+        json.put("password",password);
+        json.put("name",name);
+        json.put("balance",balance);
+        json.put("fee per trade",feePerTrade);
+        json.put("portfolio",getPortfolio().toJson());
+        return json;
     }
 
 }

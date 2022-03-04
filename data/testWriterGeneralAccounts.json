@@ -1,0 +1,41 @@
+{"database": [
+    {
+        "password": "potter",
+        "fee per trade": 5,
+        "balance": 10000,
+        "portfolio": {"stock owned": [{
+            "stock symbol": "GOOG",
+            "average cost": 3000,
+            "number of shares owned": 10
+        }]},
+        "name": "the chosen one",
+        "username": "harry"
+    },
+    {
+        "password": "yeager",
+        "fee per trade": 5,
+        "balance": 9000,
+        "portfolio": {"stock owned": [
+            {
+                "stock symbol": "TSLA",
+                "average cost": 300,
+                "number of shares owned": 5
+            },
+            {
+                "stock symbol": "AAPL",
+                "average cost": 400,
+                "number of shares owned": 10
+            }
+        ]},
+        "name": "tatakae",
+        "username": "eren"
+    },
+    {
+        "password": "idiot",
+        "fee per trade": 5,
+        "balance": 0,
+        "portfolio": {"stock owned": []},
+        "name": "war criminal",
+        "username": "putin"
+    }
+]}

@@ -25,7 +25,8 @@ Let's start investing!
 - As a user, I want to add/remove stocks I bought/sold to/from my portfolio.
 - As a user, I want to view the summary of my portfolio.
 - As an admin, I want to add the trading accounts to a database.
-- (To be implemented) As a user, I want to save my progress in the account, and retrieve it when I quit and login again. 
+- As a user, I want to save the accounts when quit application.
+- As a user, I want to retrieve previous save of my account.
 
 
 

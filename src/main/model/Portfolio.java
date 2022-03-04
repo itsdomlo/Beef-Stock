@@ -1,10 +1,14 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 // Represents the stock portfolio of a trading account
-public class Portfolio {
+public class Portfolio implements Writable {
 
     private List<StockOwned> portfolio;
 
@@ -30,7 +34,7 @@ public class Portfolio {
     // EFFECTS: returns StockOwned of given symbol, null otherwise
     public StockOwned getStock(String symbol) {
         for (StockOwned stockOwned : this.portfolio) {
-            if (stockOwned.getStock().getSymbol().equals(symbol.toUpperCase())) {
+            if (stockOwned.getStockSymbol().equals(symbol)) {
                 return stockOwned;
             }
         }
@@ -43,15 +47,6 @@ public class Portfolio {
         return this.portfolio.get(index);
     }
 
-    // EFFECTS: returns total market value of portfolio
-    public double totalPortfolioMarketValue() {
-        double totalValue = 0;
-        for (int i = 0; i < this.portfolio.size(); i++) {
-            totalValue += this.portfolio.get(i).totalValueAtMarketPrice();
-        }
-        return totalValue;
-    }
-
     // EFFECTS: returns number of stocks owned in the portfolio
     public int size() {
         return this.portfolio.size();
@@ -60,6 +55,24 @@ public class Portfolio {
     // EFFECTS: returns true is portfolio is empty, false otherwise
     public boolean isEmpty() {
         return this.portfolio.isEmpty();
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("stock owned",stockOwnedToJson());
+        return json;
+    }
+
+    // EFFECTS: returns all stocks owned in this portfolio as a JSON array
+    private JSONArray stockOwnedToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (StockOwned stockOwned : portfolio) {
+            jsonArray.put(stockOwned.toJson());
+        }
+
+        return jsonArray;
     }
 
 }

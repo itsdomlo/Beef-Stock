@@ -20,16 +20,16 @@ public class MarketTest {
 
     @Test
     void testConstructor() {
-        assertEquals(0,market.size());
+        assertEquals(0, market.size());
         assertTrue(market.isEmpty());
     }
 
     @Test
     void testAddStock() {
         market.addStock(APPLE);
-        assertEquals(APPLE,market.getStock("AAPL"));
-        assertEquals(APPLE,market.getStock(0));
-        assertEquals(1,market.size());
+        assertEquals(APPLE, market.getStock("AAPL"));
+        assertEquals(APPLE, market.getStock(0));
+        assertEquals(1, market.size());
         assertFalse(market.isEmpty());
     }
 
@@ -42,13 +42,21 @@ public class MarketTest {
     void testGetStockSymbolSuccess() {
         market.addStock(APPLE);
         market.addStock(MICROSOFT);
-        assertEquals(MICROSOFT,market.getStock("MSFT"));
+        assertEquals(MICROSOFT, market.getStock("MSFT"));
     }
 
     @Test
     void testGetStockIndex() {
         market.addStock(APPLE);
         market.addStock(MICROSOFT);
-        assertEquals(MICROSOFT,market.getStock(1));
+        assertEquals(MICROSOFT, market.getStock(1));
     }
+
+    @Test
+    void testStockValueAtMarketPrice() {
+        market.addStock(APPLE);
+        assertEquals(APPLE.marketPrice() * 10,
+                market.stockValueAtMarketPrice(APPLE.getSymbol(), 10));
+    }
+
 }

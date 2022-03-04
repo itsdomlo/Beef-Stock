@@ -1,15 +1,19 @@
 package model;
 
-// Represents a stock owned in the portfolio
-public class StockOwned {
+import org.json.JSONObject;
+import persistence.Writable;
 
-    private Stock stock;
+// Represents a stock owned in the portfolio
+public class StockOwned implements Writable {
+
+    // private Stock stock;
+    private String stockSymbol;
     private int numSharesOwned;
     private double averageCost;
 
     // EFFECTS: initialize a newly owned stock
-    public StockOwned(Stock stock, int numSharesOwned, double averageCost) {
-        this.stock = stock;
+    public StockOwned(String stockSymbol, int numSharesOwned, double averageCost) {
+        this.stockSymbol = stockSymbol;
         this.numSharesOwned = numSharesOwned;
         this.averageCost = averageCost;
     }
@@ -35,19 +39,9 @@ public class StockOwned {
         return this.numSharesOwned * this.averageCost;
     }
 
-    // EFFECTS: returns total value of owned stock at market price
-    public double totalValueAtMarketPrice() {
-        return this.numSharesOwned * stock.marketPrice();
-    }
-
-    // EFFECTS: returns profit or loss of owned stock
-    public double profitOrLoss() {
-        return totalValueAtMarketPrice() - totalValueAtAverageCost();
-    }
-
     // GETTERS
-    public Stock getStock() {
-        return this.stock;
+    public String getStockSymbol() {
+        return this.stockSymbol;
     }
 
     public int getNumSharesOwned() {
@@ -58,4 +52,12 @@ public class StockOwned {
         return this.averageCost;
     }
 
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("stock symbol",stockSymbol);
+        json.put("number of shares owned",numSharesOwned);
+        json.put("average cost",averageCost);
+        return json;
+    }
 }

@@ -1,10 +1,14 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 // Represents the account database of the trading app, in which the accounts must have unique username
-public class Accounts {
+public class Accounts implements Writable {
 
     private List<Account> database;
 
@@ -53,6 +57,24 @@ public class Accounts {
     // EFFECTS: returns true if database is empty, false otherwise
     public boolean isEmpty() {
         return this.database.isEmpty();
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("database",databaseToJson());
+        return json;
+    }
+
+    // EFFECTS: returns all accounts in this database as a JSON array
+    private JSONArray databaseToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Account account : database) {
+            jsonArray.put(account.toJson());
+        }
+
+        return jsonArray;
     }
 
 }

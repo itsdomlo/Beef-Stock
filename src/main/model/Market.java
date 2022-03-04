@@ -36,6 +36,13 @@ public class Market {
         return this.market.get(index);
     }
 
+    // REQUIRES: stock is in market
+    // EFFECTS: returns total value of numShares of stock at market price
+    public double stockValueAtMarketPrice(String symbol, int numShares) {
+        Stock stock = getStock(symbol);
+        return numShares * stock.marketPrice();
+    }
+
     // EFFECTS: returns number of stocks in market
     public int size() {
         return this.market.size();

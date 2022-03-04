@@ -12,8 +12,8 @@ public class Stock {
     private double bidAskSpread; // as a fraction of the askPrice
     private long totalNumShares;
     private double earningsPerShare; // in USD
-    private double beta;
-    private String sector;
+    private double beta; // the stock's volatility relative to overall market
+    private String sector; // the business sector in which the company operates in
 
     // For price fluctuation generator
     private int priceMidForRand;
