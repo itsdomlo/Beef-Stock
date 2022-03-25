@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+// Represents the buy panel
 public class AccountBuyPanel extends AbstractPanel {
 
     protected static final String COMBO = "combo";
@@ -25,6 +26,7 @@ public class AccountBuyPanel extends AbstractPanel {
     private JLabel buyMessage;
     private Timer timer;
 
+    // EFFECTS: constructs and sets up the buy panel
     public AccountBuyPanel(AccountFrontPanel accountFrontPanel) {
         super();
         this.accountFrontPanel = accountFrontPanel;
@@ -44,6 +46,8 @@ public class AccountBuyPanel extends AbstractPanel {
         addButton("Back", BACK);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds the combo box with stocks available for purchase to this
     private void addComboBox() {
         List<String> stockList = new ArrayList<>();
         stockList.add(" ");
@@ -60,6 +64,8 @@ public class AccountBuyPanel extends AbstractPanel {
         this.add(comboBox);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds the spinner for inputting the number of stocks to purchase
     private void addSpinner() {
         SpinnerNumberModel model = new SpinnerNumberModel(1, 1, null, 1);
         spinner = new JSpinner(model);
@@ -71,6 +77,8 @@ public class AccountBuyPanel extends AbstractPanel {
         this.add(spinner);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds the field for inputting purchase price
     private void addPriceField() {
         NumberFormatter formatter = new NumberFormatter();
         formatter.setValueClass(Double.class);
@@ -83,6 +91,8 @@ public class AccountBuyPanel extends AbstractPanel {
         this.add(priceField);
     }
 
+    // MODIFIES: this
+    // EFFECTS: regularly refreshes the price label of the selected stock
     private void updateComboBoxMessage() {
         Market market = accountFrontPanel.getLoginGUI().getFrontGUI().getMarket();
 
@@ -107,6 +117,8 @@ public class AccountBuyPanel extends AbstractPanel {
         }
     }
 
+    // MODIFIES: this, accountFrontPanel
+    // EFFECTS: buy the stock
     private void buy(String symbol, int numSharesToBuy, Double price) {
         Market market = accountFrontPanel.getLoginGUI().getFrontGUI().getMarket();
         Account account = accountFrontPanel.getAccount();
@@ -131,6 +143,8 @@ public class AccountBuyPanel extends AbstractPanel {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: resets fields and labels on this panel, and stop the refreshing of label
     @Override
     protected void resetFieldsAndLabels() {
         comboBox.setSelectedIndex(0);
@@ -143,6 +157,8 @@ public class AccountBuyPanel extends AbstractPanel {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: handles actions performed on this panel
     @Override
     public void actionPerformed(ActionEvent e) {
         CardLayout cl = (CardLayout) accountFrontPanel.getLayout();

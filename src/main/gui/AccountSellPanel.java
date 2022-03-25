@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+// Represents the sell panel
 public class AccountSellPanel extends AbstractPanel {
 
     protected static final String COMBO = "combo";
@@ -22,9 +23,9 @@ public class AccountSellPanel extends AbstractPanel {
     private JSpinner spinner;
     private JFormattedTextField priceField;
     private JLabel sellMessage;
-    private Timer timerForComboBox;
     private Timer timer;
 
+    // EFFECTS: constructs and sets up the buy panel
     public AccountSellPanel(AccountFrontPanel accountFrontPanel) {
         super();
         this.accountFrontPanel = accountFrontPanel;
@@ -46,6 +47,8 @@ public class AccountSellPanel extends AbstractPanel {
         addButton("Back", BACK);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds the combo box with stocks available to sell to this
     private void addComboBox() {
         Portfolio portfolio = accountFrontPanel.getAccount().getPortfolio();
 
@@ -65,6 +68,8 @@ public class AccountSellPanel extends AbstractPanel {
         this.add(comboBox);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds the spinner for inputting the number of stocks to sell
     private void addSpinner() {
         SpinnerNumberModel model = new SpinnerNumberModel(1, 1, null, 1);
         spinner = new JSpinner(model);
@@ -76,6 +81,8 @@ public class AccountSellPanel extends AbstractPanel {
         this.add(spinner);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds the field for inputting selling price
     private void addPriceField() {
         NumberFormatter formatter = new NumberFormatter();
         formatter.setValueClass(Double.class);
@@ -88,6 +95,8 @@ public class AccountSellPanel extends AbstractPanel {
         this.add(priceField);
     }
 
+    // MODIFIES: this
+    // EFFECTS: refreshes the combo box showing stocks available to sell
     public void updateComboBox() {
         Portfolio portfolio = accountFrontPanel.getAccount().getPortfolio();
 
@@ -100,6 +109,8 @@ public class AccountSellPanel extends AbstractPanel {
         comboBox.setModel(newModel);
     }
 
+    // MODIFIES: this
+    // EFFECTS: regularly refreshes the price label of the selected stock
     private void updateComboBoxMessage() {
         if (timer != null) {
             timer.stop();
@@ -128,6 +139,8 @@ public class AccountSellPanel extends AbstractPanel {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: updates the max number of shares available to sell for the selected stock
     private void updateSpinnerMax() {
         spinner.setValue(1);
         String symbol = (String) comboBox.getSelectedItem();
@@ -139,6 +152,8 @@ public class AccountSellPanel extends AbstractPanel {
         }
     }
 
+    // MODIFIES: this, accountFrontPanel
+    // EFFECTS: sell the stock
     private void sell(String symbol, int numSharesToSell, Double price) {
         Market market = accountFrontPanel.getLoginGUI().getFrontGUI().getMarket();
         Stock stock = market.getStock(symbol);
@@ -162,6 +177,8 @@ public class AccountSellPanel extends AbstractPanel {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: resets fields and labels on this panel, and stop the refreshing of label
     @Override
     protected void resetFieldsAndLabels() {
         comboBox.setSelectedIndex(0);
@@ -175,6 +192,8 @@ public class AccountSellPanel extends AbstractPanel {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: handles actions performed on this panel
     @Override
     public void actionPerformed(ActionEvent e) {
         CardLayout cl = (CardLayout) accountFrontPanel.getLayout();

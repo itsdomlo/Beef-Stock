@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+// Represents the logged in account panel
 public class AccountFrontPanel extends JPanel implements ActionListener {
 
     protected static final String ACCOUNT_FRONT = "accountFront";
@@ -34,13 +35,14 @@ public class AccountFrontPanel extends JPanel implements ActionListener {
     private JLabel portfolioValueLabel = new JLabel();
     private JLabel accountValueLabel = new JLabel();
 
-    private FrontLoginPanel frontLoginPanel;
+    private FrontLoginPanel loggedOutPanel;
     private Account account;
     private Timer timer;
 
-    public AccountFrontPanel(FrontLoginPanel frontLoginPanel, Account account) {
+    // EFFECTS: constructs as a card panel which contains all related panels
+    public AccountFrontPanel(FrontLoginPanel loggedOutPanel, Account account) {
         super(new CardLayout());
-        this.frontLoginPanel = frontLoginPanel;
+        this.loggedOutPanel = loggedOutPanel;
         this.account = account;
 
         setUpAccountFrontPanel();
@@ -65,6 +67,8 @@ public class AccountFrontPanel extends JPanel implements ActionListener {
         this.add(accountPortfolioPanel, PORTFOLIO);
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets up the account front panel
     private void setUpAccountFrontPanel() {
 
         accountFrontPanel = new JPanel();
@@ -92,12 +96,16 @@ public class AccountFrontPanel extends JPanel implements ActionListener {
         addButton("Logout", LOGOUT);
     }
 
+    // MODIFIES: this
+    // EFFECTS: aligns labels on account front panel
     private void alignLabels() {
         buyingPowerLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         portfolioValueLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         accountValueLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
     }
 
+    // MODIFIES: this
+    // EFFECTS: regularly refresh relevant labels on account front panel
     private void regularRefreshLabels() {
         timer = new Timer(FrontGUI.everyMillisecondUpdateStockPrice, new ActionListener() {
             @Override
@@ -108,6 +116,8 @@ public class AccountFrontPanel extends JPanel implements ActionListener {
         timer.start();
     }
 
+    // MODIFIES: this
+    // EFFECTS: loads information to the labels on account front panel
     private void loadLabels() {
         buyingPowerLabel.setText(String.format("Your buying power is $%,.2f.", account.getBalance()));
         portfolioValueLabel.setText(String.format("Your portfolio market value is $%,.2f",
@@ -118,7 +128,7 @@ public class AccountFrontPanel extends JPanel implements ActionListener {
 
     // EFFECTS: returns total market value of all stocks in the portfolio of given account
     private double portfolioTotalMarketValue() {
-        Market market = frontLoginPanel.getFrontGUI().getMarket();
+        Market market = loggedOutPanel.getFrontGUI().getMarket();
         double portfolioTotalMarketValue = 0;
         for (int i = 0; i < account.getPortfolio().size(); i++) {
             StockOwned stockOwned = account.getPortfolio().getStock(i);
@@ -128,6 +138,8 @@ public class AccountFrontPanel extends JPanel implements ActionListener {
         return portfolioTotalMarketValue;
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds a button with action listener to account front panel
     private void addButton(String text, String command) {
         JButton button = new JButton(text);
         button.setActionCommand(command);
@@ -136,22 +148,28 @@ public class AccountFrontPanel extends JPanel implements ActionListener {
         accountFrontPanel.add(button);
     }
 
+    // EFFECTS: returns account
     public Account getAccount() {
         return account;
     }
 
+    // EFFECTS: returns the logged out panel
     public FrontLoginPanel getLoginGUI() {
-        return frontLoginPanel;
+        return loggedOutPanel;
     }
 
+    // MODIFIES: this
+    // EFFECTS: handles the actions performed on this panel
     @Override
     public void actionPerformed(ActionEvent e) {
-        CardLayout clForLogout = (CardLayout) frontLoginPanel.getLayout();
+        CardLayout clForLogout = (CardLayout) loggedOutPanel.getLayout();
         CardLayout clThis = (CardLayout) this.getLayout();
         String command = e.getActionCommand();
         handleCommand(clForLogout, clThis, command);
     }
 
+    // MODIFIES: this
+    // EFFECTS: details of handling the actions performed
     private void handleCommand(CardLayout clForLogout, CardLayout clThis, String command) {
         switch (command) {
             case DEPOSIT:
@@ -178,22 +196,30 @@ public class AccountFrontPanel extends JPanel implements ActionListener {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: handle the logout action
     private void handleLogout(CardLayout clForLogout) {
         timer.stop();
-        clForLogout.show(frontLoginPanel, FrontLoginPanel.LOGIN_PANEL);
+        clForLogout.show(loggedOutPanel, FrontLoginPanel.LOGIN_PANEL);
     }
 
+    // MODIFIES: this
+    // EFFECTS: handle the portfolio action
     private void handlePortfolio(CardLayout clThis) {
         accountPortfolioPanel.setUpTableModel();
         accountPortfolioPanel.regularRefreshData();
         clThis.show(this, PORTFOLIO);
     }
 
+    // MODIFIES: this
+    // EFFECTS: handle the sell action
     private void handleSell(CardLayout clThis) {
         accountSellPanel.updateComboBox();
         clThis.show(this, SELL);
     }
 
+    // MODIFIES: this
+    // EFFECTS: handle the explore action
     private void handleExplore(CardLayout clThis) {
         accountExplorePanel.regularRefreshData();
         clThis.show(this, EXPLORE);

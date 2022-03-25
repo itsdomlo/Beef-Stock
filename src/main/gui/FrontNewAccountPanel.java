@@ -19,6 +19,7 @@ public class FrontNewAccountPanel extends AbstractPanel {
     private JLabel usernameUsedLabel;
     private JLabel registrationMessageLabel;
 
+    // EFFECTS: constructs the new account panel
     public FrontNewAccountPanel(FrontGUI frontGUI) {
         super();
         this.frontGUI = frontGUI;
@@ -30,6 +31,8 @@ public class FrontNewAccountPanel extends AbstractPanel {
         addButton("Back", BACK_FRONT);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds username field and relevant labels
     private void addUsernameFieldAndLabels() {
         addStaticLabel("Register a new account:");
         addStaticLabel("Username (not case-sensitive):");
@@ -41,6 +44,8 @@ public class FrontNewAccountPanel extends AbstractPanel {
         this.add(usernameUsedLabel);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds password field and relevant labels
     private void addPasswordFieldAndLabels() {
         addStaticLabel("Password (case-sensitive):");
         passwordField = new JPasswordField();
@@ -48,6 +53,8 @@ public class FrontNewAccountPanel extends AbstractPanel {
         this.add(passwordField);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds name field and relevant labels
     private void addNameField() {
         addStaticLabel("Your name:");
         nameField = new JTextField();
@@ -55,12 +62,16 @@ public class FrontNewAccountPanel extends AbstractPanel {
         this.add(nameField);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds registration message label
     private void addRegistrationMessageLabel() {
         registrationMessageLabel = new JLabel(" ");
         registrationMessageLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         this.add(registrationMessageLabel);
     }
 
+    // MODIFIES: this, frontGUI
+    // EFFECTS: creates and adds a new account to the application
     private void registerAccount(String username, String password, String name) {
         Accounts accounts = this.frontGUI.getAccounts();
         if (isEmptyOrContainsSpace(username) || isEmptyOrContainsSpace(password) || isEmptyOrContainsSpace(name)) {
@@ -77,10 +88,13 @@ public class FrontNewAccountPanel extends AbstractPanel {
         }
     }
 
+    // EFFECTS: returns true if string is empty or contains space
     private boolean isEmptyOrContainsSpace(String string) {
         return string.isEmpty() || string.contains(" ");
     }
 
+    // MODIFIES: this
+    // EFFECTS: resets all relevant fields and labels
     protected void resetFieldsAndLabels() {
         usernameField.setText(null);
         passwordField.setText(null);
@@ -89,6 +103,8 @@ public class FrontNewAccountPanel extends AbstractPanel {
         registrationMessageLabel.setText(" ");
     }
 
+    // MODIFIES: this
+    // EFFECTS: handles action events on this panel
     @Override
     public void actionPerformed(ActionEvent e) {
         Container containerPanel = frontGUI.getContainerPanel();

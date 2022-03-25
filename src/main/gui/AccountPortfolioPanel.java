@@ -10,12 +10,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+// Represents the account portfolio panel
 public class AccountPortfolioPanel extends AbstractPanel {
 
     private AccountFrontPanel accountFrontPanel;
     private JTable table;
     private Timer timer;
 
+    // EFFECTS: sets up the account portfolio panel
     public AccountPortfolioPanel(AccountFrontPanel accountFrontPanel) {
         super();
         this.accountFrontPanel = accountFrontPanel;
@@ -24,6 +26,8 @@ public class AccountPortfolioPanel extends AbstractPanel {
         addButton("Back", BACK);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds an empty table
     private void addTable() {
         table = new JTable();
         table.setDefaultEditor(Object.class, null);
@@ -33,6 +37,8 @@ public class AccountPortfolioPanel extends AbstractPanel {
         this.add(sp);
     }
 
+    // MODIFIES: this
+    // EFFECTS: loads the data model into table
     public void setUpTableModel() {
         Market market = accountFrontPanel.getLoginGUI().getFrontGUI().getMarket();
         Portfolio portfolio = accountFrontPanel.getAccount().getPortfolio();
@@ -54,6 +60,8 @@ public class AccountPortfolioPanel extends AbstractPanel {
         table.setModel(model);
     }
 
+    // MODIFIES: this
+    // EFFECTS: regularly refreshes the data model
     public void regularRefreshData() {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         Market market = accountFrontPanel.getLoginGUI().getFrontGUI().getMarket();
@@ -77,9 +85,11 @@ public class AccountPortfolioPanel extends AbstractPanel {
 
     @Override
     protected void resetFieldsAndLabels() {
-
+        // nothing to resets
     }
 
+    // MODIFIES: this
+    // EFFECTS: handles actions performed on this panel
     @Override
     public void actionPerformed(ActionEvent e) {
         CardLayout cl = (CardLayout) accountFrontPanel.getLayout();

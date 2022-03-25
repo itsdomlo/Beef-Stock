@@ -7,6 +7,7 @@ import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
+// Represents the withdrawal panel
 public class AccountWithdrawPanel extends AbstractPanel {
 
     protected static final String WITHDRAW = "withdraw";
@@ -15,6 +16,7 @@ public class AccountWithdrawPanel extends AbstractPanel {
     private JFormattedTextField amountField;
     private JLabel messageLabel;
 
+    // EFFECTS: constructs and sets up the withdrawal panel
     public AccountWithdrawPanel(AccountFrontPanel accountFrontPanel) {
         super();
         this.accountFrontPanel = accountFrontPanel;
@@ -25,6 +27,8 @@ public class AccountWithdrawPanel extends AbstractPanel {
         addButton("Back", BACK);
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets up and adds the amount field
     private void addAmountField() {
         NumberFormatter formatter = new NumberFormatter();
         formatter.setValueClass(Double.class);
@@ -36,12 +40,16 @@ public class AccountWithdrawPanel extends AbstractPanel {
         this.add(amountField);
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets up and adds the message label
     private void addMessageLabel() {
         messageLabel = new JLabel(" ");
         messageLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         this.add(messageLabel);
     }
 
+    // MODIFIES: this, accountFrontPanel
+    // EFFECTS: withdraws amount into account
     private void withdraw(Double amount) {
         Account account = accountFrontPanel.getAccount();
         if (amount != null) {
@@ -56,12 +64,16 @@ public class AccountWithdrawPanel extends AbstractPanel {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: resets fields and labels on this panel
     @Override
     protected void resetFieldsAndLabels() {
         amountField.setValue(null);
         messageLabel.setText(" ");
     }
 
+    // MODIFIES: this
+    // EFFECTS: handles actions performed on this panel
     @Override
     public void actionPerformed(ActionEvent e) {
         CardLayout cl = (CardLayout) accountFrontPanel.getLayout();

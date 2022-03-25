@@ -25,6 +25,7 @@ public class FrontLoginPanel extends JPanel implements ActionListener {
     private JPasswordField passwordField = new JPasswordField();
     private JLabel loginFailLabel = new JLabel(" ");
 
+    // EFFECTS: constructs itself as a card panel which contains the login panel
     public FrontLoginPanel(FrontGUI frontGUI) {
         super(new CardLayout());
         this.frontGUI = frontGUI;
@@ -33,6 +34,8 @@ public class FrontLoginPanel extends JPanel implements ActionListener {
         this.add(loginPanel,LOGIN_PANEL);
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets up the login panel
     private void setUpLoginPanel() {
         loginPanel = new JPanel();
 
@@ -46,6 +49,8 @@ public class FrontLoginPanel extends JPanel implements ActionListener {
         addButton("Back", BACK_FRONT);
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets up components of the login panel
     private void addFieldsAndLabels() {
         addStaticLabel("Login:");
         addStaticLabel("Username:");
@@ -58,6 +63,8 @@ public class FrontLoginPanel extends JPanel implements ActionListener {
         loginPanel.add(loginFailLabel);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds a button with action listener to login panel
     protected void addButton(String text, String command) {
         JButton button = new JButton(text);
         button.setActionCommand(command);
@@ -66,23 +73,31 @@ public class FrontLoginPanel extends JPanel implements ActionListener {
         loginPanel.add(button);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds a label to the login panel
     protected void addStaticLabel(String text) {
         JLabel label = new JLabel(text);
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
         loginPanel.add(label);
     }
 
+    // MODIFIES: c
+    // EFFECTS: set size and left align c
     protected void setLeftAndSize(JComponent c) {
         c.setMaximumSize(new Dimension(200, c.getPreferredSize().height));
         c.setAlignmentX(Component.LEFT_ALIGNMENT);
     }
 
+    // MODIFIES: this
+    // EFFECTS: resets relevant fields and labels on the login panel
     protected void resetFieldsAndLabels() {
         usernameField.setText(null);
         passwordField.setText(null);
         loginFailLabel.setText(" ");
     }
 
+    // MODIFIES: this
+    // EFFECTS: creates and adds a logged in account panel to this, and show it
     private void login(String username, String password) {
         Accounts accounts = frontGUI.getAccounts();
         Account account = accounts.getAccount(username, password);
@@ -98,6 +113,8 @@ public class FrontLoginPanel extends JPanel implements ActionListener {
 
     }
 
+    // MODIFIES: this
+    // EFFECTS: handles action events on this panel
     @Override
     public void actionPerformed(ActionEvent e) {
         Container containerPanel = frontGUI.getContainerPanel();
@@ -115,6 +132,7 @@ public class FrontLoginPanel extends JPanel implements ActionListener {
         }
     }
 
+    // EFFECTS: returns frontGUI
     public FrontGUI getFrontGUI() {
         return frontGUI;
     }

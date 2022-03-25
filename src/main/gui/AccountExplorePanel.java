@@ -12,13 +12,14 @@ import java.awt.event.MouseEvent;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 
-
+// Represent the explore stock market panel
 public class AccountExplorePanel extends AbstractPanel {
 
     private AccountFrontPanel accountFrontPanel;
     private JTable table;
     private Timer timer;
 
+    // EFFECTS: constructs and sets up the explore panel
     public AccountExplorePanel(AccountFrontPanel accountFrontPanel) {
         super();
         this.accountFrontPanel = accountFrontPanel;
@@ -27,6 +28,8 @@ public class AccountExplorePanel extends AbstractPanel {
         addButton("Back", BACK);
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets up the table with data and add to this panel
     private void addTable() {
         Market market = accountFrontPanel.getLoginGUI().getFrontGUI().getMarket();
 
@@ -49,6 +52,8 @@ public class AccountExplorePanel extends AbstractPanel {
         this.add(sp);
     }
 
+    // MODIFIES: this
+    // EFFECTS: handles double click action on the table
     private void doubleClickForDetails(Market market) {
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -64,6 +69,8 @@ public class AccountExplorePanel extends AbstractPanel {
         });
     }
 
+    // MODIFIES: this
+    // EFFECTS: regularly refreshes relevant data in the table
     public void regularRefreshData() {
         Market market = accountFrontPanel.getLoginGUI().getFrontGUI().getMarket();
         DefaultTableModel model = (DefaultTableModel) table.getModel();
@@ -83,9 +90,11 @@ public class AccountExplorePanel extends AbstractPanel {
 
     @Override
     protected void resetFieldsAndLabels() {
-
+        // nothing to reset
     }
 
+    // MODIFIES: this
+    // EFFECTS: handles actions performed on this panel
     @Override
     public void actionPerformed(ActionEvent e) {
         CardLayout cl = (CardLayout) accountFrontPanel.getLayout();

@@ -45,6 +45,7 @@ public class FrontGUI extends JFrame implements ActionListener {
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
 
+    // EFFECTS: constructs and setups the JFrame of the application
     public FrontGUI() {
         super("Beef Stock");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -54,11 +55,15 @@ public class FrontGUI extends JFrame implements ActionListener {
         this.setVisible(true);
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets up the panels and underlying models
     private void setUp() {
         setUpPanels();
         setUpModels();
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets up card panel and its corresponding panels
     private void setUpPanels() {
         containerPanel = new JPanel(new CardLayout());
 
@@ -74,6 +79,8 @@ public class FrontGUI extends JFrame implements ActionListener {
         this.add(containerPanel);
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets up front panel
     private void setUpFrontPanel() {
         frontPanel = new JPanel();
         setBoxLayoutVertical(frontPanel);
@@ -89,6 +96,8 @@ public class FrontGUI extends JFrame implements ActionListener {
         frontPanel.add(saveLoadLabel);
     }
 
+    // MODIFIES: this
+    // EFFECTS: add all related buttons to front panel
     private void addFrontButtons() {
         addButton("Create new account", NEW_ACCOUNT);
         addButton("Login", LOGIN);
@@ -97,6 +106,8 @@ public class FrontGUI extends JFrame implements ActionListener {
         addButton("Exit", EXIT);
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets up and adds a button with action listener to front panel
     private void addButton(String text, String command) {
         JButton button = new JButton(text);
         button.setActionCommand(command);
@@ -105,19 +116,26 @@ public class FrontGUI extends JFrame implements ActionListener {
         frontPanel.add(button);
     }
 
+    // MODIFIES: panel
+    // EFFECTS: sets box layout for panel
     private void setBoxLayoutVertical(Container panel) {
         BoxLayout bl = new BoxLayout(panel, BoxLayout.Y_AXIS);
         panel.setLayout(bl);
     }
 
+    // EFFECTS: returns container panel
     public Container getContainerPanel() {
         return containerPanel;
     }
 
+    // MODIFIES: this
+    // EFFECTS: clears relevant labels and fields on front panel
     private void clearLabelsAndFields() {
         saveLoadLabel.setText(" ");
     }
 
+    // MODIFIES: this
+    // EFFECTS: handles action events on this frame
     @Override
     public void actionPerformed(ActionEvent e) {
         CardLayout cl = (CardLayout) containerPanel.getLayout();
@@ -144,6 +162,8 @@ public class FrontGUI extends JFrame implements ActionListener {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets up underlying models for the application
     private void setUpModels() {
         market = new Market();
         addStocksToMarket();
@@ -160,6 +180,8 @@ public class FrontGUI extends JFrame implements ActionListener {
         }, 0, everyMillisecondUpdateStockPrice); //update stock price every given millisecond
     }
 
+    // MODIFIES: this
+    // EFFECTS: loads all stocks into the market
     private void addStocksToMarket() {
         market.addStock(new Stock("AAPL", "Apple Inc.", 176.28, 0.0005,
                 16320000000L, 6.01, 1.19, "Technology"));
@@ -171,6 +193,8 @@ public class FrontGUI extends JFrame implements ActionListener {
                 1030000000L, 4.9, 2.01, "Capital Goods"));
     }
 
+    // MODIFIES: this
+    // EFFECTS: load accounts from PATH to application
     private void loadAccounts() {
         jsonReader = new JsonReader(PATH);
         try {
@@ -181,6 +205,8 @@ public class FrontGUI extends JFrame implements ActionListener {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: save existing state of accounts to PATH
     private void saveAccounts() {
         jsonWriter = new JsonWriter(PATH);
         try {
@@ -193,10 +219,12 @@ public class FrontGUI extends JFrame implements ActionListener {
         }
     }
 
+    // EFFECTS: returns accounts
     public Accounts getAccounts() {
         return accounts;
     }
 
+    // EFFECTS: returns market
     public Market getMarket() {
         return market;
     }

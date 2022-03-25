@@ -9,7 +9,7 @@ import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
+// Represents the popup frame of the selected stock
 public class AccountExplorePopupFrame extends JFrame {
 
     private Stock stock;
@@ -17,6 +17,7 @@ public class AccountExplorePopupFrame extends JFrame {
     private JTable table;
     private Timer timer;
 
+    // EFFECTS: sets up the popup frame
     public AccountExplorePopupFrame(Stock stock) {
         super(stock.getSymbol());
         this.stock = stock;
@@ -40,6 +41,8 @@ public class AccountExplorePopupFrame extends JFrame {
 
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets up and regularly refreshes the table with data
     private void setUpTable() {
         DefaultTableModel model = new DefaultTableModel();
         Object[] headings = {"Stock symbol", "Company", "Sector", "Bid price", "Ask price", "Market Capitalization",
