@@ -27,7 +27,7 @@ public class Accounts implements Writable {
     // EFFECTS: returns true if username is already used in an account in database
     public boolean isUsernameUsedAlready(String username) {
         for (Account account : this.database) {
-            if (account.getUsername().equals(username)) {
+            if (account.getUsername().equals(username.toLowerCase())) {
                 return true;
             }
         }
