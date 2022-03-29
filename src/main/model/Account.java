@@ -52,11 +52,13 @@ public class Account implements Writable {
         this.balance = this.balance - numSharesToBuy * price - this.feePerTrade;
         StockOwned s = this.portfolio.getStock(symbol);
         if (s != null) {
-            s.buyStockOwned(numSharesToBuy,price);
+            s.buyStockOwned(numSharesToBuy, price);
         } else {
-            StockOwned stockOwned = new StockOwned(symbol,numSharesToBuy,price);
+            StockOwned stockOwned = new StockOwned(symbol, numSharesToBuy, price);
             this.portfolio.addStockOwned(stockOwned);
         }
+        EventLog.getInstance().logEvent(new Event(name + " purchased " + numSharesToBuy + " X "
+                + symbol + " at " + String.format("$%.2f", price)));
     }
 
     // REQUIRES: Owns this stock, numSharesToSell <= shares owned, numSharesToSell, price <= stock.bidPrice (for now)
@@ -72,6 +74,8 @@ public class Account implements Writable {
         } else {
             this.portfolio.removeStockOwned(stockOwned);
         }
+        EventLog.getInstance().logEvent(new Event(name + " sold " + numSharesToSell + " X "
+                + stockOwned.getStockSymbol() + " at " + String.format("$%.2f", price)));
     }
 
     // SETTERS
@@ -132,12 +136,12 @@ public class Account implements Writable {
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
-        json.put("username",username);
-        json.put("password",password);
-        json.put("name",name);
-        json.put("balance",balance);
-        json.put("fee per trade",feePerTrade);
-        json.put("portfolio",getPortfolio().toJson());
+        json.put("username", username);
+        json.put("password", password);
+        json.put("name", name);
+        json.put("balance", balance);
+        json.put("fee per trade", feePerTrade);
+        json.put("portfolio", getPortfolio().toJson());
         return json;
     }
 

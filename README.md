@@ -28,6 +28,13 @@ Let's start investing!
 - As a user, I want to save the accounts when quit application.
 - As a user, I want to retrieve previous save of my account.
 
+## Phase 4: Task 2
 
-
-
+- Tue Mar 29 16:31:02 PDT 2022<br>
+dominic sold 3 X TSLA at $900.00
+- Tue Mar 29 16:31:10 PDT 2022<br>
+dominic purchased 5 X GOOG at $3000.00
+- Tue Mar 29 16:31:21 PDT 2022<br>
+athena purchased 6 X AAPL at $200.00
+- Tue Mar 29 16:31:27 PDT 2022<br>
+athena sold 2 X MSFT at $300.00

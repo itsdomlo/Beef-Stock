@@ -1,6 +1,8 @@
 package gui;
 
 import model.Accounts;
+import model.Event;
+import model.EventLog;
 import model.Market;
 import model.Stock;
 import persistence.JsonReader;
@@ -158,6 +160,7 @@ public class FrontGUI extends JFrame implements ActionListener {
             default:
                 timer.cancel();
                 this.dispose();
+                printLog(EventLog.getInstance());
                 break;
         }
     }
@@ -218,6 +221,13 @@ public class FrontGUI extends JFrame implements ActionListener {
             //
         }
     }
+
+    private void printLog(EventLog el) {
+        for (Event next : el) {
+            System.out.println(next.toString());
+        }
+    }
+
 
     // EFFECTS: returns accounts
     public Accounts getAccounts() {
