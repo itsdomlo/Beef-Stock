@@ -38,3 +38,7 @@ dominic purchased 5 X GOOG at $3000.00
 athena purchased 6 X AAPL at $200.00
 - Tue Mar 29 16:31:27 PDT 2022<br>
 athena sold 2 X MSFT at $300.00
+
+## Phase 4: Task 3
+
+- 

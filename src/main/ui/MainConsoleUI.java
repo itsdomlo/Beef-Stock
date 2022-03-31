@@ -1,6 +1,6 @@
 package ui;
 
-public class Main {
+public class MainConsoleUI {
     public static void main(String[] args) {
         new BeefStock();
     }
