@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+// Represents the login panel
 public class FrontLoginPanel extends JPanel implements ActionListener {
 
 

@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
+// Represents the panel for account creation
 public class FrontNewAccountPanel extends AbstractPanel {
 
     protected static final String BACK_FRONT = "backFront";

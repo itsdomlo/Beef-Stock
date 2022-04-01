@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+// Represents the GUI frame of the BeefStock app
 public class FrontGUI extends JFrame implements ActionListener {
 
     //For GUI

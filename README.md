@@ -41,4 +41,8 @@ athena sold 2 X MSFT at $300.00
 
 ## Phase 4: Task 3
 
-- 
+- For GUI classes, more panels can extend the AbstractPanel to reduce code duplication and ensure uniform format
+- For GUI, AccountDepositPanel and AccountWithdrawPanel is very similar. A new class/abstract class which represents the shared functionalities and formats would be useful.
+- The information displayed and functionalities of the console UI (BeefStock class) and GUI (FrontGUI class) are essentially the same, they only differ in presentation. Perhaps the use of interface/abstract classes can ensure both UI to behave uniformly.
+- The BeefStock class is running the entire console UI. It should split up in multiple classes to adhere to the single responsibility principle.
+- As the stock market price is changing regularly, multiple labels, tables displaying information which depends on said changing stock price needs to be updated regularly as well. Implementing the Observer/Observable pattern can simplify this update process.
